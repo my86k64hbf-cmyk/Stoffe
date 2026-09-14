@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lernprogramm – Stoffe: Süsse Chemie</title>
+<style>
+:root{
+  --blue:#1769aa;--light:#eef7ff;--green:#18864b;
+  --red:#c43838;--yellow:#fff3bf;--text:#1d2935;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:#f5f7fa;color:var(--text);
+  font-family:system-ui,-apple-system,Arial,sans-serif;
+  font-size:18px;line-height:1.55
+}
+header{
+  padding:24px 18px;background:linear-gradient(135deg,#1769aa,#45a4d8);
+  color:white;text-align:center
+}
+header h1{margin:0 0 6px;font-size:clamp(26px,6vw,40px)}
+header p{margin:0}
+main{max-width:820px;margin:auto;padding:18px}
+.card{
+  background:white;border-radius:18px;padding:22px;margin-bottom:16px;
+  box-shadow:0 5px 18px #18364b18
+}
+.progress{height:18px;background:#dce5ec;border-radius:20px;overflow:hidden}
+.progress div{height:100%;background:var(--green);transition:.3s}
+.module{
+  width:100%;text-align:left;border:2px solid #d7e1e8;background:white;
+  border-radius:15px;padding:16px;margin:7px 0;font-size:18px;cursor:pointer
+}
+.module:hover,.module:focus{border-color:var(--blue);background:var(--light)}
+.module.done{border-color:var(--green);background:#eaf9f0}
+button{
+  border:0;border-radius:12px;padding:13px 17px;margin:5px;
+  font-size:17px;font-weight:650;cursor:pointer
+}
+.primary{background:var(--blue);color:white}
+.secondary{background:#e4ebf0;color:var(--text)}
+.good{background:var(--green);color:white}
+.retry{background:#f0b429;color:#292000}
+.option{
+  display:block;width:100%;text-align:left;margin:10px 0;
+  background:#f2f6f9;border:2px solid transparent
+}
+.option:hover{border-color:var(--blue)}
+.option.correct{background:#dff6e8;border-color:var(--green)}
+.option.wrong{background:#ffe3e3;border-color:var(--red)}
+.option:disabled{color:var(--text);cursor:default}
+.feedback{padding:15px;border-radius:12px;margin:15px 0}
+.feedback.ok{background:#dff6e8}
+.feedback.no{background:#ffe3e3}
+.tip{background:var(--yellow);padding:14px;border-radius:12px}
+textarea{
+  width:100%;min-height:110px;padding:13px;border:2px solid #b8c7d1;
+  border-radius:12px;font:inherit
+}
+.topline{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.small{font-size:15px;color:#50616e}
+.hidden{display:none}
+.tag{
+  display:inline-block;background:var(--light);color:var(--blue);
+  border-radius:20px;padding:4px 10px;font-size:15px;font-weight:bold
+}
+@media(max-width:520px){
+  body{font-size:17px}.card{padding:17px}.topline{display:block}
+  button{width:100%;margin:5px 0}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🧪 Stoffe – Süsse Chemie</h1>
+  <p>Interaktives Lernprogramm für die 6. Klasse</p>
+</header>
+<main id="app"></main>
+
+<script>
+const modules=[
+{
+ title:"1. Stoff oder Gegenstand",
+ goals:"Lernziele 1–2",
+ info:"Form, Grösse und Länge gehören zum Gegenstand. Härte, Magnetisierbarkeit, Wasserlöslichkeit, Wärmeleitfähigkeit und Aggregatszustand gehören zum Stoff.",
+ qs:[
+  mc("Ein Kupferdraht ist 25 cm lang. Was ist «25 cm lang»?",
+    ["Stoffeigenschaft","Gegenstandseigenschaft"],1,
+    "Die Länge verändert sich, wenn der Draht geteilt wird."),
+  mc("Glas leitet Wärme anders als Metall. Was wird beschrieben?",
+    ["Stoffeigenschaft","Gegenstandseigenschaft"],0,
+    "Die Wärmeleitfähigkeit bleibt für den Stoff typisch."),
+  mc("Eisen wird von einem Magneten angezogen. Was ist das?",
+    ["Form","Magnetisierbarkeit","Grösse"],1,
+    "Die Magnetisierbarkeit ist eine Stoffeigenschaft."),
+  self("Warum ist die Wasserlöslichkeit von Zucker eine Stoffeigenschaft?",
+    "Auch wenn man einen Zuckerwürfel teilt, bleiben alle Teile wasserlöslich. Die Eigenschaft bleibt für den Stoff Zucker erhalten.")
+ ]
+},
+{
+ title:"2. Stoffe untersuchen",
+ goals:"Lernziele 3–4",
+ info:"Beim Untersuchen gilt: Beobachtung → Vergleich → Schlussfolgerung. Oft braucht man mehrere Tests.",
+ qs:[
+  mc("Zwei graue Metallstücke sehen gleich aus. Welche Tests sind geeignet?",
+    ["Länge und Form","Magnetisierbarkeit und Wärmeleitfähigkeit","Grösse und Gewicht"],1,
+    "Stoffeigenschaften können zeigen, ob es verschiedene Stoffe sind."),
+  mc("Zwei Pulver lösen sich beide gut in Wasser. Weshalb braucht es einen zweiten Test?",
+    ["Damit man genauer unterscheiden kann","Weil der Wassertest immer falsch ist","Damit mehr Wasser gebraucht wird"],0,
+    "Ein Test kann bei verschiedenen Stoffen dasselbe Ergebnis liefern."),
+  mc("Auf Filterpapier entstehen bei zwei schwarzen Filzstiften unterschiedliche Farbmuster. Was folgt daraus?",
+    ["Es ist sicher derselbe Stift","Es kann nicht derselbe Farbstoffmix sein","Beide Stifte gehören derselben Person"],1,
+    "Unterschiedliche Farbmuster schliessen eine Übereinstimmung aus."),
+  self("Erkläre kurz, was beim Filzstiftversuch auf feuchtem Filterpapier passiert.",
+    "Das Wasser transportiert die Farbstoffe über das Papier. Die verschiedenen Farbstoffe bewegen sich unterschiedlich weit und bilden ein Farbmuster.")
+ ]
+},
+{
+ title:"3. Modelle und Zuckerwasser",
+ goals:"Lernziele 5–7",
+ info:"Unsichtbar bedeutet nicht verschwunden. Denkmodelle helfen, nicht direkt sichtbare Vorgänge zu erklären.",
+ qs:[
+  mc("Eine Zeichnung zeigt Wasser- und Zuckerteilchen als verschiedenfarbige Kreise. Welche Modellart ist das?",
+    ["Modell der sichtbaren Welt","Denkmodell"],1,
+    "Die Teilchen sind nicht direkt sichtbar. Die Kreise helfen beim Erklären."),
+  mc("10 g Zucker werden vollständig in 20 g Wasser gelöst. Wie schwer ist das Gemisch?",
+    ["20 g","25 g","30 g"],2,
+    "Beim Mischen geht kein Stoff verloren."),
+  mc("Wie kann man nachweisen, dass gelöster Zucker noch vorhanden ist?",
+    ["Das Wasser verdunsten lassen","Mehr Wasser zugeben","Das Glas abdunkeln"],0,
+    "Nach dem Verdunsten bleibt Zucker zurück und wird als Kristall sichtbar."),
+  self("Beschreibe eine richtige Teilchenzeichnung von Zuckerwasser.",
+    "Wasserteilchen und Zuckerteilchen sind gemeinsam und gleichmässig verteilt. Die Zuckerteilchen dürfen nicht fehlen.")
+ ]
+},
+{
+ title:"4. Wasserdampf und Zustände",
+ goals:"Lernziele 8–9",
+ info:"Wasserdampf ist unsichtbar. Kondensation macht Wasser wieder als flüssige Tropfen sichtbar.",
+ qs:[
+  mc("Was geschieht, wenn Wasserdampf auf einen kalten Löffel trifft?",
+    ["Er verschwindet","Er kondensiert","Er wird zu Zucker"],1,
+    "Der Wasserdampf kühlt ab und wird wieder zu flüssigem Wasser."),
+  mc("Wie sind Teilchen in einer Flüssigkeit angeordnet?",
+    ["Dicht und regelmässig","Dicht, ungeordnet und beweglich","Weit voneinander entfernt"],1,
+    "Flüssigkeitsteilchen liegen dicht beieinander, können sich aber bewegen."),
+  mc("Welche Zustandsänderung führt von gasförmig zu flüssig?",
+    ["Schmelzen","Verdampfen","Kondensieren"],2,
+    "Beim Kondensieren wird ein Gas wieder flüssig."),
+  self("Erkläre mit dem Löffelversuch, wie Wasserdampf nachgewiesen wird.",
+    "Unsichtbarer Wasserdampf trifft auf den kühlen Löffel und kühlt ab. Er wird zu flüssigem Wasser. Die sichtbaren Tropfen sind der Nachweis. Der Vorgang heisst Kondensation.")
+ ]
+},
+{
+ title:"5. Zustandsänderung oder neuer Stoff?",
+ goals:"Lernziele 10–11",
+ info:"Bei einer Zustandsänderung bleibt der Stoff gleich. Verändern sich mehrere Stoffeigenschaften dauerhaft, ist wahrscheinlich ein neuer Stoff entstanden.",
+ qs:[
+  mc("Festes Wachs wird flüssig. Ist automatisch ein neuer Stoff entstanden?",
+    ["Ja","Nein"],1,
+    "Das Wachs bleibt Wachs. Nur sein Aggregatszustand ändert sich."),
+  mc("Zucker ist nach starkem Erhitzen braun, riecht anders und ist schlechter wasserlöslich. Was ist wahrscheinlich?",
+    ["Nur die Form ist anders","Ein neuer Stoff ist entstanden","Der Zucker ist nur geschmolzen"],1,
+    "Mehrere Stoffeigenschaften haben sich verändert."),
+  mc("Bei welchem Vorgang spricht mehr für einen neuen Stoff?",
+    ["Eis schmilzt","Wasser verdampft","Ein weisser Stoff wird braun und riecht anders"],2,
+    "Farbe und Geruch sind danach dauerhaft anders."),
+  self("Erkläre den Unterschied zwischen schmelzendem Eis und stark erhitztem Zucker.",
+    "Beim Eis ändert sich nur der Aggregatszustand. Es bleibt Wasser. Beim Zucker verändern sich mehrere Stoffeigenschaften; deshalb ist wahrscheinlich ein neuer Stoff entstanden.")
+ ]
+},
+{
+ title:"6. Probeprüfung",
+ goals:"Alle Lernziele",
+ info:"Löse die Aufgaben möglichst ohne Hilfe. Lies genau: nennen, beschreiben, erklären oder begründen?",
+ qs:[
+  mc("Welche Eigenschaft gehört zum Gegenstand?",
+    ["Härte","Länge","Wasserlöslichkeit"],1,"Länge verändert sich beim Teilen."),
+  mc("Welche Eigenschaft gehört zum Stoff?",
+    ["Form","Grösse","Wärmeleitfähigkeit"],2,"Wärmeleitfähigkeit bleibt stofftypisch."),
+  mc("Warum sind für unbekannte Pulver mehrere Tests sinnvoll?",
+    ["Weil ein Test gleiche Ergebnisse liefern kann","Weil Pulver immer gefährlich sind","Weil Wasser nicht untersucht werden darf"],0,
+    "Erst mehrere Eigenschaften erlauben eine sichere Unterscheidung."),
+  mc("Was bedeutet ein gleiches Farbmuster bei zwei Filzstiften?",
+    ["Die Stifte könnten übereinstimmen","Es sind sicher verschiedene Stifte","Die Besitzer sind dieselbe Person"],0,
+    "Gleiche Muster sind ein Hinweis, aber kein sicherer Personenbeweis."),
+  mc("Gelöster Zucker ist nicht sichtbar. Was stimmt?",
+    ["Er ist verschwunden","Er ist als Teilchen verteilt","Er wurde zu Wasser"],1,
+    "Die Zuckerteilchen sind weiterhin vorhanden."),
+  mc("Wie sind Gasteilchen angeordnet?",
+    ["Dicht und regelmässig","Dicht und ungeordnet","Mit grossen Abständen"],2,
+    "Gasteilchen bewegen sich frei mit grossen Abständen."),
+  mc("Was ist Wasserdampf?",
+    ["Unsichtbares gasförmiges Wasser","Die sichtbare weisse Wolke","Flüssiger Zucker"],0,
+    "Der eigentliche Wasserdampf ist unsichtbar."),
+  mc("Fest zu gasförmig heisst …",
+    ["kondensieren","sublimieren","erstarren"],1,
+    "Beim Sublimieren wird ein fester Stoff direkt gasförmig."),
+  mc("Was brennt bei der Kerze hauptsächlich?",
+    ["Festes Wachs","Gasförmiges Wachs","Der Metallbecher"],1,
+    "Gasförmiges Wachs steigt beim Docht hoch und verbrennt."),
+  mc("Was ist ein Hinweis auf einen neuen Stoff?",
+    ["Nur eine andere Form","Nur ein anderer Aggregatszustand","Mehrere dauerhaft veränderte Stoffeigenschaften"],2,
+    "Mehrere neue Stoffeigenschaften sprechen für eine Stoffumwandlung.")
+ ]
+}
+];
+
+function mc(prompt,options,answer,why){
+ return {type:"mc",prompt,options,answer,why};
+}
+function self(prompt,model){
+ return {type:"self",prompt,model};
+}
+
+let progress=load();
+let current=0,index=0,correct=0;
+
+function load(){
+ try{return JSON.parse(localStorage.getItem("stoffeProgress"))||{}}
+ catch(e){return {}}
+}
+function save(){localStorage.setItem("stoffeProgress",JSON.stringify(progress))}
+function speak(text){
+ if(!("speechSynthesis" in window))return alert("Vorlesen wird von diesem Browser nicht unterstützt.");
+ speechSynthesis.cancel();
+ speechSynthesis.speak(new SpeechSynthesisUtterance(text));
+}
+function home(){
+ const done=Object.keys(progress).filter(k=>progress[k]).length;
+ const pct=Math.round(done/modules.length*100);
+ document.getElementById("app").innerHTML=`
+ <section class="card">
+   <h2>Dein Lernweg</h2>
+   <p>Arbeite in kurzen Einheiten. Begründe deine Antworten möglichst mit einem ganzen Satz.</p>
+   <div class="progress"><div style="width:${pct}%"></div></div>
+   <p><strong>${done} von ${modules.length}</strong> Einheiten abgeschlossen</p>
+ </section>
+ <section class="card">
+   ${modules.map((m,i)=>`
+    <button class="module ${progress[i]?"done":""}" onclick="start(${i})">
+      <strong>${progress[i]?"✓ ":""}${m.title}</strong><br>
+      <span class="small">${m.goals}</span>
+    </button>`).join("")}
+ </section>
+ <section class="card tip">
+   <strong>Antwort-Trick:</strong><br>
+   1. Antwort geben → 2. Beobachtung nennen → 3. mit «deshalb» begründen.
+ </section>`;
+}
+function start(i){
+ current=i;index=0;correct=0;question();
+}
+function question(){
+ const m=modules[current],q=m.qs[index];
+ document.getElementById("app").innerHTML=`
+ <section class="card">
+  <div class="topline">
+   <span class="tag">${m.goals}</span>
+   <button class="secondary" onclick="home()">Zur Übersicht</button>
+  </div>
+  <h2>${m.title}</h2>
+  <p class="tip">${m.info}</p>
+  <p class="small">Aufgabe ${index+1} von ${m.qs.length}</p>
+  <div class="progress"><div style="width:${(index/m.qs.length)*100}%"></div></div>
+ </section>
+ <section class="card">
+  <button class="secondary" onclick='speak(${JSON.stringify(q.prompt)})'>🔊 Vorlesen</button>
+  <h3>${q.prompt}</h3>
+  <div id="answer">${answerHTML(q)}</div>
+  <div id="feedback"></div>
+ </section>`;
+}
+function answerHTML(q){
+ if(q.type==="mc"){
+  return q.options.map((o,i)=>
+   `<button class="option" onclick="choose(${i})">${String.fromCharCode(65+i)}: ${o}</button>`
+  ).join("");
+ }
+ return `<textarea aria-label="Eigene Antwort" placeholder="Antwort hier eingeben oder mündlich erklären …"></textarea>
+ <button class="primary" onclick="showModel()">Musterlösung anzeigen</button>`;
+}
+function choose(choice){
+ const q=modules[current].qs[index];
+ const buttons=[...document.querySelectorAll(".option")];
+ buttons.forEach((b,i)=>{
+  b.disabled=true;
+  if(i===q.answer)b.classList.add("correct");
+  if(i===choice&&choice!==q.answer)b.classList.add("wrong");
+ });
+ const ok=choice===q.answer;
+ if(ok)correct++;
+ document.getElementById("feedback").innerHTML=`
+  <div class="feedback ${ok?"ok":"no"}">
+   <strong>${ok?"Richtig!":"Noch nicht ganz."}</strong><br>${q.why}
+  </div>
+  <button class="primary" onclick="next()">Weiter</button>`;
+}
+function showModel(){
+ const q=modules[current].qs[index];
+ document.getElementById("feedback").innerHTML=`
+  <div class="feedback ok"><strong>Musterlösung:</strong><br>${q.model}</div>
+  <p>Konntest du den Inhalt selbst erklären?</p>
+  <button class="good" onclick="selfRate(true)">Ja, kann ich</button>
+  <button class="retry" onclick="selfRate(false)">Noch üben</button>`;
+}
+function selfRate(ok){
+ if(ok)correct++;
+ next();
+}
+function next(){
+ const m=modules[current];
+ index++;
+ if(index<m.qs.length)question();
+ else finish();
+}
+function finish(){
+ progress[current]=true;save();
+ const total=modules[current].qs.length;
+ document.getElementById("app").innerHTML=`
+ <section class="card">
+  <h2>Einheit abgeschlossen 🎉</h2>
+  <p>Du hast <strong>${correct} von ${total}</strong> Aufgaben sicher beantwortet.</p>
+  <p>${correct===total
+   ?"Sehr gut. Erkläre nun einen Merksatz nochmals mündlich."
+   :"Wiederhole die unsicheren Fragen später nochmals."}</p>
+  <button class="primary" onclick="start(${current})">Einheit wiederholen</button>
+  <button class="good" onclick="home()">Zur Übersicht</button>
+ </section>`;
+}
+function resetAll(){
+ if(confirm("Soll der gesamte Lernfortschritt gelöscht werden?")){
+  localStorage.removeItem("stoffeProgress");progress={};home();
+ }
+}
+home();
+</script>
+</body>
+</html>
